@@ -14,6 +14,26 @@ End-to-end pipeline for real-time adverse event detection in clinical EHR using 
 - Fuse with tabular ML model for risk scoring
 - Deploy as API with monitoring, CI/CD, and explainability
 
+## Data
+
+Simulated EHR data is generated using the `ehr_data_generator.py` script in the root directory. The output is stored in the `data/` directory.
+
+**What was simulated:** Synthetic clinical notes and structured EHR records, including patient demographics, vital signs, medications, lab results, and free-text clinical narratives that mimic scenarios involving potential adverse events (e.g., drug reactions, procedural complications).
+
+**Data references:** 
+- Generator script: `ehr_data_generator.py`
+- Sample data: `data/` directory (explore subfolders for raw and processed files)
+
+**Data issues:**
+- Synthetic data lacks the full complexity and variability of real EHR data.
+- Potential biases in simulation (e.g., over-representation of common events).
+- No real patient identifiers; for production use, real data must be de-identified per HIPAA/GDPR standards.
+- Limited scale; may require augmentation for robust model training.
+
+## Next Steps
+- Design LLM prompts for extracting and classifying adverse events from unstructured clinical notes.
+- Integrate Gemini API (e.g., via Google AI SDK) for real-time inference on incoming EHR data.
+
 ## To-Do Next
 - [ ] Set up environment and requirements.txt
 - [ ] Simulate/gather sample EHR data
