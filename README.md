@@ -1,9 +1,20 @@
 # Adverse-Event-Detection-LLM
+# Day 1:
+
 Goal: “Build a real-time pipeline that uses LLMs (like Gemini 2.5 Flash) to extract relevant details from clinical notes and combines these with structured EHR data to predict or flag potential adverse medical events.”
 
 Motivation: Early detection is critical; doctors log most relevant info as text.
 
 Success Metric: E.g., “High recall for critical events, reasonable API latency.”
+
+# Day 2:
+Day 2: LLM Prompt Engineering Step-by-Step
+Goal
+Create, test, and iterate prompts that allow Gemini to:
+
+Summarize a doctor’s note for adverse event risk.
+
+Extract structured entities (diagnosis, medication, symptoms, adverse event signals) from messy clinical text.
 
 # Adverse-Event-Detection-LLM
 End-to-end pipeline for real-time adverse event detection in clinical EHR using a combination of Gemini 2.5 Flash and classic ML models.

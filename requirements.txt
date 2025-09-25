@@ -7,3 +7,5 @@ openai
 httpx 
 pyyaml
 faker
+google-generativeai
+python-dotenv
