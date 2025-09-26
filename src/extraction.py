@@ -8,6 +8,7 @@ import os
 import re
 from dotenv import load_dotenv
 import google.generativeai as genai
+import pandas as pd
 
 # Load environment variables
 load_dotenv()
@@ -89,7 +90,7 @@ Instructions:
 - diagnosis: string or null if not mentioned.
 - medications: array of strings, empty [] if none.
 - symptoms_side_effects: array of strings, empty [] if none.
-- adverse_event.present: true only if symptom explicitly caused by medication (e.g., "developed [symptom] post [med]", "after [med]"); else false.
+- adverse_event.present: true ONLY if there is explicit evidence of causation between a symptom/side effect and a medication (e.g., "caused by [med]", "due to [med]", "side effect of [med]", "developed [symptom] as a result of [med]"). Temporal proximity alone (e.g., "after [med]") is NOT sufficient unless causation is clearly stated; else false.
 - adverse_event.description: concise description if present, else "No Adverse Event Detected".
 
 Clinical Note: {note}
@@ -129,18 +130,20 @@ def extract_with_gemini(note: str, model_name: str = "gemini-2.5-flash") -> dict
 
 # Example usage
 if __name__ == "__main__":
-    sample_notes = [
-        "Patient with hypertension prescribed Aspirin. Developed rash and swelling post Aspirin.",
-        "Complains of chest pain after receiving Atorvastatin.",
-        "Normal exam, no adverse reaction noted."
-    ]
-
-    print("Extracting with Gemini...")
-    for sample_note in sample_notes:
+    df = pd.read_csv('data/synthetic_ehr.csv')
+    sample_data = df.head(5)
+    print("Extracting with Gemini on 5 samples from synthetic_ehr.csv...")
+    for index, row in sample_data.iterrows():
+        note = row['note']
+        ground_truth = row['adverse_event']
         try:
-            extracted = extract_with_gemini(sample_note)
-            print("\nExtracted Data:")
+            extracted = extract_with_gemini(note)
+            print(f"\nSample {index}:")
+            print(f"Note: {note}")
+            print("Extracted Data:")
             print(json.dumps(extracted, indent=2))
+            match = ground_truth == extracted['adverse_event']['present']
+            print(f"Ground Truth Adverse Event: {ground_truth}, Extracted: {extracted['adverse_event']['present']}, Match: {match}")
         except Exception as e:
-            print(f"Error during extraction: {e}")
+            print(f"Error during extraction for sample {index}: {e}")
             print("Ensure GEMINI_API_KEY is set in .env and dependencies are installed.")
