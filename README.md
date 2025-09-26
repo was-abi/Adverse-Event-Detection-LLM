@@ -16,7 +16,7 @@ Summarize a doctor’s note for adverse event risk.
 
 Extract structured entities (diagnosis, medication, symptoms, adverse event signals) from messy clinical text.
 
-## Day 3: Prompt Iteration and Documentation
+# Day 3: Prompt Iteration and Documentation
 Goal: Refine prompts based on initial testing, address issues like false positives in adverse event detection, and document the process.
 
 Progress:
@@ -25,6 +25,12 @@ Progress:
 - Updated `notebooks/02_llm_prompt_engineering.ipynb` with test results, revised prompt template, feedback, and recommendations (e.g., add few-shot examples for future iterations).
 
 This iteration improves reliability for the LLM extraction step. Next: Integrate into pipeline.
+
+# Day 4: Tabular ML Model — Baseline Adverse Event Classification
+Goal
+Build, train, and evaluate a simple ML model (e.g., Logistic Regression, Decision Tree) using only structured EHR data fields.
+
+Document pipeline and results for comparison with LLM-augmented approach.
 
 # Adverse-Event-Detection-LLM
 End-to-end pipeline for real-time adverse event detection in clinical EHR using a combination of Gemini 2.5 Flash and classic ML models.
