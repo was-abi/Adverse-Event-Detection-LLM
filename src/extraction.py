@@ -99,7 +99,7 @@ JSON:"""
     
     return prompt
 
-def extract_with_gemini(note: str, model_name: str = "gemini-2.5-flash") -> dict:
+def extract_with_gemini(note: str, model_name: str = "gemini-1.5-flash") -> dict:
     """
     Extract entities from a clinical note using Gemini API.
     
@@ -128,22 +128,35 @@ def extract_with_gemini(note: str, model_name: str = "gemini-2.5-flash") -> dict
     else:
         raise ValueError("Empty response from Gemini")
 
+def run_full_extraction():
+    """
+    Run extraction on the full dataset and save results to CSV.
+    
+    Returns:
+        pd.DataFrame: The DataFrame of extracted entities.
+    """
+
+    dfs = pd.read_csv('data/synthetic_ehr.csv')
+    df = dfs.sample(12, random_state=42).reset_index(drop=True)
+
+    llm_outputs = []
+    
+    for i, note in enumerate(df['note']):
+        try:
+            entities = extract_with_gemini(note)
+        except Exception:
+            entities = {}
+        llm_outputs.append(entities)
+        
+        if (i + 1) % 10 == 0:
+            print(f"Processed {i + 1} notes...")
+    
+    llm_df = pd.DataFrame(llm_outputs)
+    llm_df.to_csv('data/llm_extractions.csv', index=False)
+    print("Extraction complete. Results saved to data/llm_extractions.csv")
+    
+    return llm_df
+
 # Example usage
 if __name__ == "__main__":
-    df = pd.read_csv('data/synthetic_ehr.csv')
-    sample_data = df.head(5)
-    print("Extracting with Gemini on 5 samples from synthetic_ehr.csv...")
-    for index, row in sample_data.iterrows():
-        note = row['note']
-        ground_truth = row['adverse_event']
-        try:
-            extracted = extract_with_gemini(note)
-            print(f"\nSample {index}:")
-            print(f"Note: {note}")
-            print("Extracted Data:")
-            print(json.dumps(extracted, indent=2))
-            match = ground_truth == extracted['adverse_event']['present']
-            print(f"Ground Truth Adverse Event: {ground_truth}, Extracted: {extracted['adverse_event']['present']}, Match: {match}")
-        except Exception as e:
-            print(f"Error during extraction for sample {index}: {e}")
-            print("Ensure GEMINI_API_KEY is set in .env and dependencies are installed.")
+    run_full_extraction()

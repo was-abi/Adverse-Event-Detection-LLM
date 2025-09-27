@@ -9,3 +9,6 @@ pyyaml
 faker
 google-generativeai
 python-dotenv
+transformers
+torch
+openai
